@@ -3,9 +3,6 @@ import 'constants.dart';
 
 
 // I set the whole app's dark navy look in one place here.
-// I'm on Flutter 3.41.1 so I use WidgetStateProperty — the old
-// MaterialStateProperty name was removed in this version.
-// I also use .withValues(alpha:) instead of .withOpacity() for the same reason.
 
 
 class AppTheme {
@@ -27,7 +24,7 @@ class AppTheme {
       unselectedItemColor: kTextSecondary,
       type: BottomNavigationBarType.fixed,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: kCardDark,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
@@ -66,4 +63,3 @@ class AppTheme {
     ),
   );
 }
-

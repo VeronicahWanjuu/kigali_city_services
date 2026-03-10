@@ -1,46 +1,51 @@
+# Firebase
+google-services.json
+GoogleService-Info.plist
 lib/firebase_options.dart
-android/app/google-services.json
 
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
 
-# IntelliJ related
+# Build folders - NEVER commit these
+build/
+/build/
+android/app/build/
+android/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+ios/.symlinks/
+macos/build/
+windows/build/
+linux/build/
+
+# IntelliJ/Android Studio
 *.iml
 *.ipr
 *.iws
 .idea/
 
 # VS Code
-#.vscode/
+.vscode/
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
+# Misc
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.history
+.svn/
+migrate_working_dir/
 
-# Symbolication related
+# Symbolication
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio build artifacts
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Coverage
+/coverage/

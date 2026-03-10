@@ -141,7 +141,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
             const Text('Category', style: kCaptionText),
             const SizedBox(height: 4),
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               dropdownColor: kCardDark,
               style: kBodyText,
               decoration: const InputDecoration(),

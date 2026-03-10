@@ -1,18 +1,17 @@
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
-    id "com.google.gms.google-services"
+    id("com.android.application")
+    id("kotlin-android")
+    id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace "com.kigali.kigali_directory"
-    compileSdk 35
-💡 compileSdk 35 required for Android 15 compatibility — changed from 34 in original plan.
+    namespace = "com.kigali.kigali_directory"
+    compileSdk = 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -20,27 +19,26 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.kigali.kigali_directory"
-        minSdk 23
-💡 minSdk raised to 23 because geolocator 13.x requires minimum API level 23.
-        targetSdk 35
-        versionCode flutter.versionCode
-        versionName flutter.versionName
-        multiDexEnabled true
+        applicationId = "com.kigali.kigali_directory"
+        minSdk = flutter.minSdkVersion
+        targetSdk = 36
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
 
 flutter {
-    source "../.."
+    source = "../.."
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
-    implementation "androidx.multidex:multidex:2.0.1"
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
+    implementation("androidx.multidex:multidex:2.0.1")
 }
