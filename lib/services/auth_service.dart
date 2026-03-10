@@ -2,21 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
-
 // I put all Firebase Authentication calls in this one file.
-// That way the screens stay clean and I only have to come here
+// That way the screens stay clean and I only hfave to come here
 // when something auth-related needs fixing.
-
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-
   User? get currentUser => _auth.currentUser;
   bool get isEmailVerified => _auth.currentUser?.emailVerified ?? false;
   Stream<User?> get authStateChanges => _auth.authStateChanges();
-
 
   // signUp creates the Auth account, sends the verification email,
   // then writes the user document to Firestore.
@@ -49,15 +45,17 @@ class AuthService {
     }
   }
 
-
-  // I sign the user in then immediately check if their email is verified.
-  // If it's not, I sign them out right away and show a clear message.
+  // Force reload to get latest emailVerified status from Firebase
+  // before checking if user can proceed to the app.
   Future<UserCredential> signIn(String email, String password) async {
     try {
       final cred = await _auth.signInWithEmailAndPassword(
         email: email, password: password,
       );
-      if (!cred.user!.emailVerified) {
+      // Reload user to get fresh emailVerified status
+      await cred.user!.reload();
+      final refreshedUser = _auth.currentUser;
+      if (refreshedUser != null && !refreshedUser.emailVerified) {
         await _auth.signOut();
         throw Exception(
           'Please verify your email before signing in. '
@@ -70,19 +68,15 @@ class AuthService {
     }
   }
 
-
   Future<void> signOut() => _auth.signOut();
-
 
   Future<void> sendVerificationEmail() async {
     await _auth.currentUser?.sendEmailVerification();
   }
 
-
   // I call reload() to force Firebase to re-check the emailVerified flag.
   // The verification screen calls this every 3 seconds.
   Future<void> reloadUser() async => await _auth.currentUser?.reload();
-
 
   Future<UserModel?> getUserDocument(String uid) async {
     final doc = await _db.collection('users').doc(uid).get();
@@ -90,13 +84,11 @@ class AuthService {
     return UserModel.fromFirestore(doc);
   }
 
-
   Future<void> updateNotificationPreference(String uid, bool value) async {
     await _db.collection('users').doc(uid).update({
       'notificationsEnabled': value,
     });
   }
-
 
   // I map Firebase error codes to messages a normal person can understand
   Exception _authError(FirebaseAuthException e) {
@@ -111,7 +103,6 @@ class AuthService {
         return Exception('No account found with this email.');
       case 'wrong-password':
         return Exception('Incorrect password. Please try again.');
-      // Firebase Auth 5.x changed the code from wrong-password to invalid-credential
       case 'invalid-credential':
         return Exception('Incorrect email or password.');
       case 'too-many-requests':
