@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
 // I put all Firebase Authentication calls in this one file.
-// That way the screens stay clean and I only hfave to come here
+// That way the screens stay clean and I only have to come here
 // when something auth-related needs fixing.
 
 class AuthService {
@@ -17,7 +17,7 @@ class AuthService {
   // signUp creates the Auth account, sends the verification email,
   // then writes the user document to Firestore.
   // If the Firestore write fails after Auth already succeeded,
-  // I delete the Auth account so there's no broken orphan account.
+  // I delete the Auth account so there is no broken orphan account.
   Future<UserCredential> signUp(
     String email, String password, String displayName,
   ) async {
@@ -45,23 +45,17 @@ class AuthService {
     }
   }
 
-  // Force reload to get latest emailVerified status from Firebase
-  // before checking if user can proceed to the app.
+  // I removed the signOut call for unverified users here.
+  // auth_provider handles that by showing EmailVerificationScreen
+  // when emailVerified is false. Signing out here was causing
+  // the permission-denied error on Firestore.
   Future<UserCredential> signIn(String email, String password) async {
     try {
       final cred = await _auth.signInWithEmailAndPassword(
         email: email, password: password,
       );
-      // Reload user to get fresh emailVerified status
+      // Reload to get fresh emailVerified status from Firebase
       await cred.user!.reload();
-      final refreshedUser = _auth.currentUser;
-      if (refreshedUser != null && !refreshedUser.emailVerified) {
-        await _auth.signOut();
-        throw Exception(
-          'Please verify your email before signing in. '
-          'Check your inbox for the verification link.',
-        );
-      }
       return cred;
     } on FirebaseAuthException catch (e) {
       throw _authError(e);
